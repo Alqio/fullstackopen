@@ -28,7 +28,7 @@ const App = () => {
         setNewFilter(event.target.value);
     };
 
-    const filterPersons = () => persons.filter(person => person.name.includes(newFilter));
+    const filteredPersons = () => persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()));
 
     const addPerson = (event) => {
         event.preventDefault();
@@ -45,12 +45,7 @@ const App = () => {
         }
     };
 
-    const numbers = () => persons.map(person => {
-        const p = filterPersons();
-        if (p.find(person2 => person2.name === person.name)) {
-            return <Person name={person.name} number={person.number} key={person.name}/>;
-        }
-    });
+    const numbers = () => filteredPersons().map(person => <Person name={person.name} number={person.number} key={person.name}/>);
 
 
     return (
