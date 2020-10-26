@@ -50,12 +50,34 @@ app.delete('/api/persons/:id', async (req, res, next) => {
 
 });
 
+app.put('/api/persons/:id', async (req, res, next) => {
+
+    try {
+        const name = req.body.name;
+        const number = req.body.number;
+        //const person = await PhoneNumber.findById(req.params.id);
+        //const person = await PhoneNumber.update({'id': req.params.id}, {name, number});
+        const person = await PhoneNumber.findOneAndUpdate({'_id': req.params.id}, {name, number});
+        //person.number = req.body.number;
+        //person.name = req.body.name;
+
+        res.send({
+            id: person.id,
+            name,
+            number
+        });
+
+    } catch (e) {
+        next(e);
+    }
+});
+
 app.post('/api/persons/', async (req, res, next) => {
 
     if (!req.body["name"]) {
         const e = {
             name: "MissingParameter",
-            error:"name must be provided"
+            error: "name must be provided"
         }
         next(e)
         return;
@@ -63,7 +85,7 @@ app.post('/api/persons/', async (req, res, next) => {
     if (!req.body["number"]) {
         const e = {
             name: "MissingParameter",
-            error:"number must be provided"
+            error: "number must be provided"
         }
         next(e)
         return;
@@ -82,10 +104,13 @@ app.post('/api/persons/', async (req, res, next) => {
 
 });
 
-app.get('/info', (req, res) => {
+
+
+app.get('/info', async (req, res) => {
     console.log(req);
     const d = new Date();
-    const s = "Phonebook has info for " + persons.length + "people";
+    const phoneNumbers = await PhoneNumber.find({});
+    const s = "Phonebook has info for " + phoneNumbers.length + " people";
 
     res.send(s + "<br><br>" + d);
 
@@ -104,7 +129,7 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+    response.status(404).send({error: 'unknown endpoint'})
 }
 
 // olemattomien osoitteiden käsittely
