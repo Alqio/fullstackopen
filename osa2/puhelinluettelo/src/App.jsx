@@ -83,8 +83,7 @@ const App = () => {
                         createMessage("green", "Muutettiin henkilön " + oldPerson.name + " numero");
                     })
                     .catch(error => {
-                        createMessage("red", `Henkilöä ei enää löydy kannasta`);
-                        console.log(error);
+                        createMessage("red", error.response.data.error);
                         numbersService
                             .getAll()
                             .then(data => {
@@ -103,6 +102,8 @@ const App = () => {
                 setPersons(persons.concat(data));
                 //setNewName('');
                 createMessage("green", "Lisättiin " + person.name + " onnistuneesti kantaan");
+            }).catch(error => {
+                createMessage("red", error.response.data.error);
             });
         }
     };

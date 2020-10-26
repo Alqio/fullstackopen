@@ -57,7 +57,7 @@ app.put('/api/persons/:id', async (req, res, next) => {
         const number = req.body.number;
         //const person = await PhoneNumber.findById(req.params.id);
         //const person = await PhoneNumber.update({'id': req.params.id}, {name, number});
-        const person = await PhoneNumber.findOneAndUpdate({'_id': req.params.id}, {name, number});
+        const person = await PhoneNumber.findOneAndUpdate({'_id': req.params.id}, {name, number}, {runValidators: true});
         //person.number = req.body.number;
         //person.name = req.body.name;
 
@@ -92,18 +92,21 @@ app.post('/api/persons/', async (req, res, next) => {
     }
     const name = req.body.name;
     const number = req.body.number;
+    try {
+        const phoneNumber = new PhoneNumber({
+            name,
+            number
+        });
 
-    const phoneNumber = new PhoneNumber({
-        name,
-        number
-    });
+        await phoneNumber.save();
+        res.json(phoneNumber);
 
-    await phoneNumber.save();
+    } catch (e) {
+        next(e)
+    }
 
-    res.json(phoneNumber);
 
 });
-
 
 
 app.get('/info', async (req, res) => {
@@ -121,9 +124,12 @@ const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
         return response.status(400).send({error: 'malformatted id'})
-    }
-    if (error.name === "MissingParameter") {
+    } else if (error.name === "MissingParameter") {
         return response.status(400).send({error: error.error})
+    } else if (error.name === 'ValidationError') {
+        return response.status(400).json({error: error.message})
+    } else if (error.name === 'MongoError') {
+        return response.status(400).json({error: error.message})
     }
 
     next(error)
