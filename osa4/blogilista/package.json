@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest --verbose",
     "dev": "nodemon index.js",
     "start": "node index.js"
   },
@@ -16,5 +16,14 @@
     "express": "^4.17.1",
     "mongoose": "^5.10.11",
     "nodemon": "^2.0.6"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.22.1",
+    "jest": "^26.6.1"
+  },
+  "jest": {
+    "testEnvironment": "node"
   }
 }
