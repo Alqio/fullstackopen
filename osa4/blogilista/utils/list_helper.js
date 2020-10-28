@@ -1,3 +1,5 @@
+const lodash = require('lodash')
+
 const dummy = (blogs) => {
     return 1
 }
@@ -26,8 +28,41 @@ const favoriteBlog = (blogs) => {
     }
 }
 
+const mostBlogs = (blogs) => {
+    if (blogs.length === 0) return;
+
+    const grouped = lodash.groupBy(blogs, 'author')
+    const keys = Object.keys(grouped)
+    console.log(grouped)
+    console.log(keys)
+    const mapped = keys.map(key => {
+        return {
+            author: key,
+            blogs: grouped[key].length
+        }
+    })
+    const sorted = lodash.sortBy(mapped, lodash.property(['blogs']))
+    return sorted[sorted.length - 1]
+}
+
+const mostLikes = (blogs) => {
+    if (blogs.length === 0) return;
+
+    const grouped = lodash.groupBy(blogs, 'author')
+    const keys = Object.keys(grouped)
+    console.log(grouped)
+    console.log(keys)
+
+    
+
+    const sorted = lodash.sortBy(mapped, lodash.property(['blogs']))
+    return sorted[sorted.length - 1]
+}
+
 module.exports = {
     dummy,
+    mostBlogs,
+    mostLikes,
     totalLikes,
     favoriteBlog
 }
