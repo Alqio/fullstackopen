@@ -1,13 +1,13 @@
-require('dotenv').config()
 const express = require('express')
 const app = express()
+require('express-async-errors')
 const cors = require('cors')
 const mongoose = require('mongoose')
 const blogRouter = require('./controllers/blogs')
+const config = require('./config')
 
-const mongoUrl = process.env.MONGODB_URI
 
-mongoose.connect(mongoUrl, {
+mongoose.connect(config.mongoUrl, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false,
