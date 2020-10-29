@@ -54,7 +54,6 @@ describe('POST /api/blogs', () => {
         title: 'Test blog',
         author: 'Meikä mandoliini',
         url: 'google.com',
-        likes: 125
     }
 
     test('returns json', async () => {
@@ -77,8 +76,14 @@ describe('POST /api/blogs', () => {
     })
     test('adds correct blog', async () => {
         await api.post('/api/blogs').send(blog)
-        const addedBlog = await Blog.find({title: 'Test blog'})
+        const addedBlog = await Blog.findOne({title: 'Test blog'})
         expect(addedBlog).toBeDefined()
+
+    })
+    test('adding a blog without likes should set them to 0', async () => {
+        await api.post('/api/blogs').send(blog)
+        const addedBlog = await Blog.findOne({title: 'Test blog'})
+        expect(addedBlog.likes).toEqual(0)
 
     })
 })
