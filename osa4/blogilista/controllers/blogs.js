@@ -7,11 +7,16 @@ router.get('', async (request, response) => {
 })
 
 router.post('', async (request, response) => {
-    const blog = new Blog(request.body)
+    if (!request.body.title || !request.body.url) {
+        response.status(400).send('No title or url provided')
+    } else {
+        const blog = new Blog(request.body)
 
-    const result = await blog.save()
+        const result = await blog.save()
 
-    response.status(201).json(result)
+        response.status(201).json(result)
+    }
+
 })
 
 module.exports = router

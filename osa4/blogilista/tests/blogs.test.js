@@ -86,6 +86,23 @@ describe('POST /api/blogs', () => {
         expect(addedBlog.likes).toEqual(0)
 
     })
+    test('adding a blog without url or title should respond 400', async () => {
+        await api
+            .post('/api/blogs')
+            .send({
+                title: 'jou',
+                author: 'google.com'
+            })
+            .expect(400)
+
+        await api
+            .post('/api/blogs')
+            .send({
+                author: 'jou',
+                url: 'google.com'
+            })
+            .expect(400)
+    })
 })
 
 afterAll(() => {
