@@ -15,7 +15,7 @@ beforeEach(async () => {
     await noteObject.save()
 })
 
-describe('/api/blogs', () => {
+describe('GET /api/blogs', () => {
     test('returns json', async () => {
         await api
             .get('/api/blogs')
@@ -40,6 +40,45 @@ describe('/api/blogs', () => {
         const contents = res.body.map(r => r.id)
         expect(contents[0]).toEqual('5a422a851b54a676234d17f7')
         expect(contents[1]).toEqual('5a422aa71b54a676234d17f8')
+
+    })
+})
+
+describe('POST /api/blogs', () => {
+
+    beforeEach(async () => {
+        await Blog.deleteMany({title: 'Test blog'})
+    })
+
+    const blog = {
+        title: 'Test blog',
+        author: 'Meikä mandoliini',
+        url: 'google.com',
+        likes: 125
+    }
+
+    test('returns json', async () => {
+        await api
+            .post('/api/blogs')
+            .send(blog)
+            .expect(201)
+            .expect('Content-Type', /application\/json/)
+
+    })
+    test('adds a new blog', async () => {
+        const initalBlogs = await Blog.find({})
+
+        await api.post('/api/blogs').send(blog)
+
+        const blogsAfter = await Blog.find({})
+
+        expect(blogsAfter.length).toEqual(initalBlogs.length + 1)
+
+    })
+    test('adds correct blog', async () => {
+        await api.post('/api/blogs').send(blog)
+        const addedBlog = await Blog.find({title: 'Test blog'})
+        expect(addedBlog).toBeDefined()
 
     })
 })
