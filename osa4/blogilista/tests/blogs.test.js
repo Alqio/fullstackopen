@@ -23,10 +23,21 @@ describe('/api/blogs', () => {
             .expect('Content-Type', /application\/json/)
 
     })
+    test('returns blogs with id field, not _id', async () => {
+        const res = await api.get('/api/blogs')
+
+        const b = res.body
+
+        expect(b[0].id).toBeDefined()
+        expect(b[1].id).toBeDefined()
+        expect(b[0]._id).not.toBeDefined()
+        expect(b[1]._id).not.toBeDefined()
+
+    })
     test('returns correct blogs', async () => {
         const res = await api.get('/api/blogs')
 
-        const contents = res.body.map(r => r._id)
+        const contents = res.body.map(r => r.id)
         expect(contents[0]).toEqual('5a422a851b54a676234d17f7')
         expect(contents[1]).toEqual('5a422aa71b54a676234d17f8')
 
