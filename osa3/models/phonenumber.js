@@ -23,6 +23,9 @@ const phoneNumberSchema = new mongoose.Schema({
     }
 })
 
+phoneNumberSchema.plugin(uniqueValidator);
+
+
 phoneNumberSchema.set("toJSON", {
     transform: (document, returnedObject) => {
         returnedObject.id = returnedObject._id.toString()
