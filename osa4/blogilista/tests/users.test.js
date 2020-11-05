@@ -15,7 +15,7 @@ describe('when there is initially one user at db', () => {
         await User.deleteMany({})
 
         const passwordHash = await bcrypt.hash('sekret', 10)
-        const user = new User({ username: 'root', passwordHash })
+        const user = new User({ username: 'root', password: passwordHash })
 
         await user.save()
     })
@@ -61,6 +61,27 @@ describe('when there is initially one user at db', () => {
 
         const usernames = usersAtEnd.map(u => u.username)
         expect(usernames).toContain(newUser.username)
+    })
+
+    test('creation fails with a too short password', async () => {
+        const usersAtStart = await usersInDb()
+
+        const newUser = {
+            username: 'root',
+            name: 'Superuser',
+            password: 'as',
+        }
+
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/)
+
+        expect(result.body.error).toContain('Password length must be >= 3')
+
+        const usersAtEnd = await usersInDb()
+        expect(usersAtEnd).toHaveLength(usersAtStart.length)
     })
 })
 
