@@ -1,16 +1,29 @@
 const router = require('express').Router()
 const User = require('../models/user')
+const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
 
 router.get('', async (request, response) => {
     const users = await User.find({})
-    const mapped = users.map(user => {
+    const blogs = await Blog.find({})
+    console.log(blogs)
+    const mapped = users.map((user) => {
+        const myBlogs = blogs.filter(blog => blog.user && blog.user.id.toString('hex') === user.id).map(blog => {
+            return {
+                url: blog.url,
+                author: blog.author,
+                id: blog.id,
+                title: blog.title
+            }
+        })
+
         return {
             username: user.username,
-            name: user.name
+            name: user.name,
+            blogs: myBlogs
         }
     })
-
+    console.log(mapped)
     response.json(mapped)
 })
 

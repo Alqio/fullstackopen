@@ -13,7 +13,7 @@ router.post('', async (request, response) => {
     } else {
         const users = await User.find({})
 
-        const user = users.length !== 0 ? users[0].id : null
+        const user = users.length !== 0 ? users[0]._id : null
 
         const blog = new Blog({
             ...request.body,
