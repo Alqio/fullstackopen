@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt')
 router.get('', async (request, response) => {
     const users = await User.find({})
     const blogs = await Blog.find({})
-    console.log(blogs)
+
     const mapped = users.map((user) => {
         const myBlogs = blogs.filter(blog => blog.user && blog.user.id.toString('hex') === user.id).map(blog => {
             return {
@@ -23,7 +23,6 @@ router.get('', async (request, response) => {
             blogs: myBlogs
         }
     })
-    console.log(mapped)
     response.json(mapped)
 })
 
