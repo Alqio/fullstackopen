@@ -4,6 +4,8 @@ const app = require('../app')
 const api = supertest(app)
 const blogs = require('./helper').blogs
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -14,6 +16,19 @@ beforeEach(async () => {
     noteObject = new Blog(blogs[1])
     await noteObject.save()
 })
+
+let token
+
+beforeAll(async() => {
+    const passwordHash = await bcrypt.hash('sekret', 10)
+    const user = new User({ username: 'test_user1', password: passwordHash })
+
+    await user.save()
+
+    token = await api.post('/api/login').send({username: 'test_user', password: 'sekret'})
+    console.log(token)
+})
+
 
 describe('GET /api/blogs', () => {
     test('returns json', async () => {
@@ -46,6 +61,8 @@ describe('GET /api/blogs', () => {
 
 describe('POST /api/blogs', () => {
 
+
+
     beforeEach(async () => {
         await Blog.deleteMany({title: 'Test blog'})
     })
@@ -60,6 +77,7 @@ describe('POST /api/blogs', () => {
         await api
             .post('/api/blogs')
             .send(blog)
+            .set('Authorization', token)
             .expect(201)
             .expect('Content-Type', /application\/json/)
 
@@ -67,7 +85,7 @@ describe('POST /api/blogs', () => {
     test('adds a new blog', async () => {
         const initalBlogs = await Blog.find({})
 
-        await api.post('/api/blogs').send(blog)
+        await api.post('/api/blogs').send(blog).set('Authorization', token)
 
         const blogsAfter = await Blog.find({})
 
@@ -75,13 +93,13 @@ describe('POST /api/blogs', () => {
 
     })
     test('adds correct blog', async () => {
-        await api.post('/api/blogs').send(blog)
+        await api.post('/api/blogs').send(blog).set('Authorization', token)
         const addedBlog = await Blog.findOne({title: 'Test blog'})
         expect(addedBlog).toBeDefined()
 
     })
     test('adding a blog without likes should set them to 0', async () => {
-        await api.post('/api/blogs').send(blog)
+        await api.post('/api/blogs').send(blog).set('Authorization', token)
         const addedBlog = await Blog.findOne({title: 'Test blog'})
         expect(addedBlog.likes).toEqual(0)
 
@@ -93,6 +111,7 @@ describe('POST /api/blogs', () => {
                 title: 'jou',
                 author: 'google.com'
             })
+            .set('Authorization', token)
             .expect(400)
 
         await api
@@ -101,6 +120,7 @@ describe('POST /api/blogs', () => {
                 author: 'jou',
                 url: 'google.com'
             })
+            .set('Authorization', token)
             .expect(400)
     })
 })
@@ -195,6 +215,8 @@ describe('PUT /api/blogs', () => {
         expect(modified.url).toEqual('amazon.com')
     })
 })
+
+
 
 afterAll(() => {
     mongoose.connection.close()
