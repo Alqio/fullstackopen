@@ -81,6 +81,12 @@ describe('POST /api/blogs', () => {
             .expect('Content-Type', /application\/json/)
 
     })
+    test('fails without token', async () => {
+        await api
+            .post('/api/blogs')
+            .send(blog)
+            .expect(401)
+    })
     test('adds a new blog', async () => {
         const initalBlogs = await Blog.find({})
 
