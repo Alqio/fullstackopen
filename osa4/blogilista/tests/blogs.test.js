@@ -8,6 +8,7 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
 let token
+let userId
 
 beforeEach(async () => {
     await Blog.deleteMany({})
@@ -23,6 +24,8 @@ beforeEach(async () => {
     const user = new User({ username: 'test_user1', password: passwordHash })
 
     await user.save()
+
+    userId = user.id
 
     const res = await api.post('/api/login').send({username: 'test_user1', password: 'sekret'})
     token = "Bearer " + res.body.token
@@ -136,7 +139,10 @@ describe('DELETE /api/blogs', () => {
 
     beforeEach(async () => {
         await Blog.deleteMany({})
-        const blogObject = new Blog(blog)
+        const blogObject = new Blog({
+            ...blog,
+            user: userId
+        })
         await blogObject.save()
         const b = await Blog.findOne({title: 'Test blog'})
         id = b.id
@@ -147,6 +153,7 @@ describe('DELETE /api/blogs', () => {
         const url = '/api/blogs/' + id
         await api
             .delete(url)
+            .set('Authorization', token)
             .expect(200)
             .expect('Content-Type', /application\/json/)
 
@@ -154,7 +161,7 @@ describe('DELETE /api/blogs', () => {
     test('deletes a blog', async () => {
         const initalBlogs = await Blog.find({})
 
-        await api.delete('/api/blogs/' + id)
+        await api.delete('/api/blogs/' + id).set('Authorization', token)
 
         const blogsAfter = await Blog.find({})
 
@@ -162,7 +169,7 @@ describe('DELETE /api/blogs', () => {
 
     })
     test('deletes correct blog', async () => {
-        await api.delete('/api/blogs/' + id)
+        await api.delete('/api/blogs/' + id).set('Authorization', token)
         const deletedBlog = await Blog.findOne({title: 'React patterns'})
         expect(deletedBlog).toBeNull()
 

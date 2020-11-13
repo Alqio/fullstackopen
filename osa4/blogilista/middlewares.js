@@ -1,3 +1,5 @@
+const jwt = require('jsonwebtoken')
+
 const errorHandler = (error, request, response, next) => {
 
     if (error.name === 'CastError') {
@@ -15,4 +17,20 @@ const errorHandler = (error, request, response, next) => {
     next(error)
 }
 
-module.exports = errorHandler
+const parseToken = (token) => {
+    if (!token || !token.toLowerCase().startsWith('bearer ')) return
+
+    const trimmedToken =  token.substring('bearer '.length)
+    return jwt.verify(trimmedToken, process.env.JWT_SECRET)
+}
+
+const tokenExtractor = (request, response, next) => {
+    const authorizationToken = request.get('authorization')
+    request["token"] = parseToken(authorizationToken)
+    next()
+}
+
+module.exports = {
+    errorHandler,
+    tokenExtractor
+}
