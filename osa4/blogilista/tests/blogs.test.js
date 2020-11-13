@@ -7,26 +7,25 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const bcrypt = require('bcrypt')
 
+let token
+
 beforeEach(async () => {
     await Blog.deleteMany({})
+    await User.deleteMany({})
 
     let noteObject = new Blog(blogs[0])
     await noteObject.save()
 
     noteObject = new Blog(blogs[1])
     await noteObject.save()
-})
 
-let token
-
-beforeAll(async() => {
     const passwordHash = await bcrypt.hash('sekret', 10)
     const user = new User({ username: 'test_user1', password: passwordHash })
 
     await user.save()
 
-    token = await api.post('/api/login').send({username: 'test_user', password: 'sekret'})
-    console.log(token)
+    const res = await api.post('/api/login').send({username: 'test_user1', password: 'sekret'})
+    token = "Bearer " + res.body.token
 })
 
 
@@ -60,9 +59,6 @@ describe('GET /api/blogs', () => {
 })
 
 describe('POST /api/blogs', () => {
-
-
-
     beforeEach(async () => {
         await Blog.deleteMany({title: 'Test blog'})
     })
@@ -88,8 +84,12 @@ describe('POST /api/blogs', () => {
         await api.post('/api/blogs').send(blog).set('Authorization', token)
 
         const blogsAfter = await Blog.find({})
-
         expect(blogsAfter.length).toEqual(initalBlogs.length + 1)
+
+        const user = await User.findOne({username: 'test_user1'})
+
+        const b = await Blog.find({title: 'Test blog'})
+        expect(b[0].user.toString()).toEqual(user.id)
 
     })
     test('adds correct blog', async () => {
