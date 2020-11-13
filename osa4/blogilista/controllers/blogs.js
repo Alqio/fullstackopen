@@ -3,13 +3,6 @@ const Blog = require('../models/blog')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
 
-const parseToken = (token) => {
-    if (!token || !token.toLowerCase().startsWith('bearer ')) return
-
-    const trimmedToken =  token.substring('bearer '.length)
-    return jwt.verify(trimmedToken, process.env.JWT_SECRET)
-}
-
 router.get('', async (request, response) => {
     const blogs = await Blog.find({}).populate('user', {username: 1, name: 1, id: 1})
     response.json(blogs)
@@ -20,15 +13,14 @@ router.post('', async (request, response) => {
         response.status(400).send('No title or url provided')
     } else {
 
-        const authorizationToken = request.get('authorization')
-        const token = parseToken(authorizationToken)
+        const token = request.token
 
         if (!token || !token.id) {
             const e = new Error('token missing or invalid')
             e.name = 'Unauthorized'
             throw e
         }
-        
+
         const user = await User.findById(token.id)
 
         const blog = new Blog({
@@ -61,7 +53,25 @@ router.put('/:id', async (request, response) => {
 })
 
 router.delete('/:id', async (request, response) => {
-    const blog = await Blog.findByIdAndRemove(request.params.id)
+
+    const token = request.token
+
+    const blog = await Blog.findById(request.params.id)
+
+    if (!token || !token.id) {
+        const e = new Error('token missing or invalid')
+        e.name = 'Unauthorized'
+        throw e
+    }
+    const user = await User.findById(token.id)
+
+    if (blog.user.toString() !== user.id) {
+        const e = new Error('')
+        e.name = 'Unauthorized'
+        throw e
+    }
+
+    await Blog.findByIdAndRemove(request.params.id)
 
     response.status(200).json(blog)
 
