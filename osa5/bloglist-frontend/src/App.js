@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Login from "./components/Login";
+import Logout from "./components/Logout";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -12,6 +13,12 @@ const App = () => {
             const blogs = await blogService.getAll()
             setBlogs(blogs)
         }
+
+        if (localStorage.getItem('user')) {
+            const u = JSON.parse(localStorage.getItem('user'))
+            setUser(u)
+        }
+
         fetch()
     }, [])
 
@@ -29,6 +36,7 @@ const App = () => {
             {blogs.map(blog =>
                 <Blog key={blog.id} blog={blog}/>
             )}
+            <Logout setUser={setUser}/>
         </div>
     )
 }

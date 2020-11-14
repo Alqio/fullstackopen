@@ -5,5 +5,4 @@ const login = async (data) => {
     return response.data
 }
 
-
 export default {login}
