@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Login from "./components/Login";
 import Logout from "./components/Logout";
+import AddBlog from "./components/AddBlog";
 
 const App = () => {
     const [blogs, setBlogs] = useState([])
@@ -33,10 +34,12 @@ const App = () => {
         <div>
             <h2>blogs</h2>
             <p>{user.name} logged in</p>
+            <Logout setUser={setUser}/>
+            <AddBlog blogs={blogs} setBlogs={setBlogs} user={user}/>
             {blogs.map(blog =>
                 <Blog key={blog.id} blog={blog}/>
             )}
-            <Logout setUser={setUser}/>
+
         </div>
     )
 }
