@@ -41,4 +41,4 @@ const remove = async (blog, token) => {
     return res.data
 }
 
-export default {getAll, create, update, remove}
+export default { getAll, create, update, remove }

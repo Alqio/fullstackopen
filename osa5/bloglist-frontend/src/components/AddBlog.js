@@ -1,12 +1,13 @@
-import React, {useState} from 'react'
-import blogService from "../services/blogs";
+import React, { useState } from 'react'
+import blogService from '../services/blogs'
+import PropTypes from 'prop-types'
 
-const AddBlog = ({user, blogs, setBlogs, createNotification, togglable}) => {
+const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
 
     const [blog, setBlog] = useState({
-        title: "",
-        author: "",
-        url: ""
+        title: '',
+        author: '',
+        url: ''
     })
 
     const handleSubmit = async (event) => {
@@ -15,9 +16,9 @@ const AddBlog = ({user, blogs, setBlogs, createNotification, togglable}) => {
             const createdBlog = await blogService.create(blog, user.token)
 
             setBlog({
-                title: "",
-                author: "",
-                url: ""
+                title: '',
+                author: '',
+                url: ''
             })
 
             setBlogs(blogs.concat(createdBlog))
@@ -30,8 +31,8 @@ const AddBlog = ({user, blogs, setBlogs, createNotification, togglable}) => {
     }
 
     const handleOnChange = async (event) => {
-        const target = event.target;
-        const n = target.name;
+        const target = event.target
+        const n = target.name
 
         setBlog({
             ...blog,
@@ -74,6 +75,14 @@ const AddBlog = ({user, blogs, setBlogs, createNotification, togglable}) => {
             </form>
         </div>
     )
+}
+
+AddBlog.propTypes = {
+    user: PropTypes.object.isRequired,
+    blogs: PropTypes.array.isRequired,
+    setBlogs: PropTypes.func.isRequired,
+    createNotification: PropTypes.func.isRequired,
+    togglable: PropTypes.any.isRequired
 }
 
 export default AddBlog

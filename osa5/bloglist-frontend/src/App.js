@@ -1,28 +1,28 @@
-import React, {useState, useEffect, useRef} from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
-import Login from "./components/Login";
-import Logout from "./components/Logout";
-import AddBlog from "./components/AddBlog";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
+import Login from './components/Login'
+import Logout from './components/Logout'
+import AddBlog from './components/AddBlog'
+import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 
 
 const App = () => {
     const [blogs, setBlogsInner] = useState([])
     const [user, setUser] = useState(null)
-    const [notificationMessage, setNotificationMessage] = useState(null);
+    const [notificationMessage, setNotificationMessage] = useState(null)
     const [notificationColor, setNotificationColor] = useState('green')
 
     const toggleRef = useRef()
 
-    const clearNotification = () => setTimeout(() => setNotificationMessage(null), 3000);
+    const clearNotification = () => setTimeout(() => setNotificationMessage(null), 3000)
 
     const createNotification = (message, color) => {
-        setNotificationColor(color);
-        setNotificationMessage(message);
-        clearNotification();
-    };
+        setNotificationColor(color)
+        setNotificationMessage(message)
+        clearNotification()
+    }
 
     const setBlogs = (newBlogs) => {
         const sorted = newBlogs.sort((a, b) => b.likes - a.likes)
