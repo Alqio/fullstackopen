@@ -27,18 +27,39 @@ const Blog = ({blog, setBlogs, blogs, user}) => {
         setBlogs(newBlogs.concat(createdBlog))
     }
 
+    const remove = async () => {
+        if (window.confirm('Remove blog ' + blog.title + ' by ' + blog.author)) {
+            await blogService.remove(blog, user.token)
+            const newBlogs = blogs.filter(b => b.id !== blog.id)
+
+            setBlogs(newBlogs)
+        }
+    }
+
+    const removeButton = () => {
+        if (blog.user && user.username === blog.user.username) {
+            return <button onClick={remove}>remove</button>
+        } else {
+            return null
+        }
+    }
+
     if (visible) {
         return (
             <div style={blogStyle}>
                 {blog.title}
+                <button onClick={() => setVisible(!visible)}>hide</button>
                 <br/>
-                {blog.url}
+                <a href={blog.url}>{blog.url}</a>
                 <br/>
-                {blog.likes} <button onClick={likeBlog}>like</button>
+                {blog.likes}
+                <button onClick={likeBlog}>like</button>
                 <br/>
                 {blog.author}
                 <br/>
-                <button onClick={() => setVisible(!visible)}>hide</button>
+
+                {removeButton()}
+
             </div>
         )
     }
