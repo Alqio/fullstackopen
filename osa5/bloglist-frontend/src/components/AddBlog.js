@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
 import blogService from "../services/blogs";
 
-const AddBlog = ({user, blogs, setBlogs, createNotification}) => {
+const AddBlog = ({user, blogs, setBlogs, createNotification, togglable}) => {
 
     const [blog, setBlog] = useState({
         title: "",
@@ -22,6 +22,7 @@ const AddBlog = ({user, blogs, setBlogs, createNotification}) => {
 
             setBlogs(blogs.concat(createdBlog))
             createNotification('a new blog ' + createdBlog.title + ' by ' + createdBlog.author + ' added', 'green')
+            togglable.current.toggleVisibility()
         } catch (e) {
             createNotification(JSON.stringify(e), 'red')
         }
@@ -40,7 +41,7 @@ const AddBlog = ({user, blogs, setBlogs, createNotification}) => {
 
     return (
         <div>
-            <h1>create new</h1>
+            <h2>create new</h2>
             <form onSubmit={handleSubmit}>
                 <div>
                     title
