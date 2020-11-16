@@ -9,7 +9,7 @@ import Togglable from "./components/Togglable";
 
 
 const App = () => {
-    const [blogs, setBlogs] = useState([])
+    const [blogs, setBlogsInner] = useState([])
     const [user, setUser] = useState(null)
     const [notificationMessage, setNotificationMessage] = useState(null);
     const [notificationColor, setNotificationColor] = useState('green')
@@ -23,6 +23,11 @@ const App = () => {
         setNotificationMessage(message);
         clearNotification();
     };
+
+    const setBlogs = (newBlogs) => {
+        const sorted = newBlogs.sort((a, b) => b.likes - a.likes)
+        setBlogsInner(sorted)
+    }
 
     useEffect(() => {
         const fetch = async () => {
