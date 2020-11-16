@@ -47,7 +47,8 @@ router.put('/:id', async (request, response) => {
         likes,
         title,
         author,
-        url
+        url,
+        id: request.params.id
     })
 
 })
