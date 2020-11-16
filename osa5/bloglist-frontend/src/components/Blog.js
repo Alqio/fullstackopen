@@ -48,15 +48,10 @@ const Blog = ({ blog, setBlogs, blogs, user }) => {
     if (visible) {
         return (
             <div style={blogStyle}>
-                {blog.title}
-                <button onClick={() => setVisible(!visible)}>hide</button>
-                <br/>
-                <a href={blog.url}>{blog.url}</a>
-                <br/>
-                {blog.likes}
-                <button onClick={likeBlog}>like</button>
-                <br/>
-                {blog.author}
+                <p>Title: {blog.title} <button onClick={() => setVisible(!visible)}>hide</button></p>
+                <p>URL: <a href={blog.url}>{blog.url}</a></p>
+                <p>Likes: {blog.likes} <button onClick={likeBlog}>like</button></p>
+                <p>Author: {blog.author}</p>
                 <br/>
 
                 {removeButton()}
