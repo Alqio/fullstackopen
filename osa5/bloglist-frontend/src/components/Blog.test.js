@@ -47,7 +47,6 @@ describe('<Blog />', () => {
         const showButton = component.getByText('view')
 
         fireEvent.click(showButton)
-        component.debug()
         expect(component.getByText('Author: ' + mockBlog.author)).toBeInTheDocument()
         expect(component.getByText('Title: ' + mockBlog.title)).toBeInTheDocument()
 
