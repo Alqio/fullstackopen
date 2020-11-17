@@ -1,8 +1,8 @@
-import React, { useState } from 'react'
+import React, {useState} from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const Blog = ({ blog, setBlogs, blogs, user }) => {
+const Blog = ({blog, setBlogs, blogs, user, likeBlog}) => {
 
     const [visible, setVisible] = useState(false)
 
@@ -12,20 +12,6 @@ const Blog = ({ blog, setBlogs, blogs, user }) => {
         border: 'solid',
         borderWidth: 1,
         marginBottom: 5
-    }
-
-    const likeBlog = async () => {
-
-        const newBlog = {
-            ...blog,
-            likes: blog.likes + 1
-        }
-
-        const createdBlog = await blogService.update(newBlog, user.token)
-
-        const newBlogs = blogs.filter(b => b.id !== blog.id)
-
-        setBlogs(newBlogs.concat(createdBlog))
     }
 
     const remove = async () => {
@@ -48,9 +34,13 @@ const Blog = ({ blog, setBlogs, blogs, user }) => {
     if (visible) {
         return (
             <div style={blogStyle}>
-                <p>Title: {blog.title} <button onClick={() => setVisible(!visible)}>hide</button></p>
+                <p>Title: {blog.title}
+                    <button onClick={() => setVisible(!visible)}>hide</button>
+                </p>
                 <p>URL: <a href={blog.url}>{blog.url}</a></p>
-                <p>Likes: {blog.likes} <button onClick={likeBlog}>like</button></p>
+                <p>Likes: {blog.likes}
+                    <button onClick={() => likeBlog(blog)}>like</button>
+                </p>
                 <p>Author: {blog.author}</p>
                 <br/>
 
@@ -62,7 +52,8 @@ const Blog = ({ blog, setBlogs, blogs, user }) => {
 
     return (
         <div style={blogStyle}>
-            {blog.title} {blog.author} <button onClick={() => setVisible(!visible)}>view</button>
+            {blog.title} {blog.author}
+            <button onClick={() => setVisible(!visible)}>view</button>
         </div>
     )
 }
@@ -72,6 +63,7 @@ Blog.propTypes = {
     user: PropTypes.object.isRequired,
     blogs: PropTypes.array.isRequired,
     setBlogs: PropTypes.func.isRequired,
+    likeBlog: PropTypes.func.isRequired,
 }
 
 

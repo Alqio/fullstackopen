@@ -20,6 +20,7 @@ describe('<Blog />', () => {
     }
 
     const mockSetBlogs = jest.fn()
+    const mockLikeBlog = jest.fn()
 
     beforeEach(() => {
         component = render(
@@ -28,13 +29,12 @@ describe('<Blog />', () => {
                 user={mockUser}
                 setBlogs={mockSetBlogs}
                 blogs={[mockBlog]}
+                likeBlog={mockLikeBlog}
             />
         )
     })
 
     test('renders correct content when not open', () => {
-        //component.debug()
-
         expect(component.container).toHaveTextContent(
             mockBlog.title + ' ' + mockBlog.author
         )
@@ -57,4 +57,18 @@ describe('<Blog />', () => {
 
     })
 
+    test('like button works', () => {
+
+        const showButton = component.getByText('view')
+
+        fireEvent.click(showButton)
+
+        const likeButton = component.getByText('like')
+
+        fireEvent.click(likeButton)
+        fireEvent.click(likeButton)
+
+        expect(mockLikeBlog.mock.calls).toHaveLength(2)
+
+    })
 })

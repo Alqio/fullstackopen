@@ -29,6 +29,18 @@ const App = () => {
         setBlogsInner(sorted)
     }
 
+    const likeBlog = async (blog) => {
+        const newBlog = {
+            ...blog,
+            likes: blog.likes + 1
+        }
+        const createdBlog = await blogService.update(newBlog, user.token)
+
+        const newBlogs = blogs.filter(b => b.id !== blog.id)
+        setBlogs(newBlogs.concat(createdBlog))
+
+    }
+
     useEffect(() => {
         const fetch = async () => {
             const blogs = await blogService.getAll()
@@ -71,9 +83,10 @@ const App = () => {
                 <Blog
                     key={blog.id}
                     blog={blog}
+                    user={user}
+                    likeBlog={likeBlog}
                     blogs={blogs}
                     setBlogs={setBlogs}
-                    user={user}
                 />
             )}
 
