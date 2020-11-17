@@ -37,7 +37,7 @@ const App = () => {
         const createdBlog = await blogService.update(newBlog, user.token)
 
         const newBlogs = blogs.filter(b => b.id !== blog.id)
-        setBlogs(newBlogs.concat(createdBlog))
+        setBlogs(newBlogs.concat(newBlog))
 
     }
 
