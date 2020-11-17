@@ -2,33 +2,13 @@ import React, { useState } from 'react'
 import blogService from '../services/blogs'
 import PropTypes from 'prop-types'
 
-const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
+const AddBlog = ({ createBlog }) => {
 
     const [blog, setBlog] = useState({
         title: '',
         author: '',
         url: ''
     })
-
-    const handleSubmit = async (event) => {
-        event.preventDefault()
-        try {
-            const createdBlog = await blogService.create(blog, user.token)
-
-            setBlog({
-                title: '',
-                author: '',
-                url: ''
-            })
-
-            setBlogs(blogs.concat(createdBlog))
-            createNotification('a new blog ' + createdBlog.title + ' by ' + createdBlog.author + ' added', 'green')
-            togglable.current.toggleVisibility()
-        } catch (e) {
-            createNotification(JSON.stringify(e), 'red')
-        }
-
-    }
 
     const handleOnChange = async (event) => {
         const target = event.target
@@ -40,6 +20,10 @@ const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
         })
     }
 
+    const handleSubmit = (event) => {
+        createBlog(event, blog, setBlog)
+    }
+
     return (
         <div>
             <h2>create new</h2>
@@ -47,6 +31,7 @@ const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
                 <div>
                     title
                     <input
+                        id="title"
                         type="text"
                         value={blog.title}
                         name="title"
@@ -56,6 +41,7 @@ const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
                 <div>
                     author
                     <input
+                        id="author"
                         type="text"
                         value={blog.author}
                         name="author"
@@ -65,6 +51,7 @@ const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
                 <div>
                     url
                     <input
+                        id="url"
                         type="text"
                         value={blog.url}
                         name="url"
@@ -78,11 +65,7 @@ const AddBlog = ({ user, blogs, setBlogs, createNotification, togglable }) => {
 }
 
 AddBlog.propTypes = {
-    user: PropTypes.object.isRequired,
-    blogs: PropTypes.array.isRequired,
-    setBlogs: PropTypes.func.isRequired,
-    createNotification: PropTypes.func.isRequired,
-    togglable: PropTypes.any.isRequired
+    createBlog: PropTypes.func.isRequired
 }
 
 export default AddBlog

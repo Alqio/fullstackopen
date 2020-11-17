@@ -41,6 +41,26 @@ const App = () => {
 
     }
 
+    const createBlog = async (event, blog, setBlog) => {
+        event.preventDefault()
+
+        try {
+            const createdBlog = await blogService.create(blog, user.token)
+
+            setBlog({
+                title: '',
+                author: '',
+                url: ''
+            })
+
+            setBlogs(blogs.concat(createdBlog))
+            createNotification('a new blog ' + createdBlog.title + ' by ' + createdBlog.author + ' added', 'green')
+            toggleRef.current.toggleVisibility()
+        } catch (e) {
+            createNotification(JSON.stringify(e), 'red')
+        }
+    }
+
     useEffect(() => {
         const fetch = async () => {
             const blogs = await blogService.getAll()
@@ -71,11 +91,7 @@ const App = () => {
             <Logout setUser={setUser}/>
             <Togglable buttonLabel='new note' ref={toggleRef}>
                 <AddBlog
-                    blogs={blogs}
-                    setBlogs={setBlogs}
-                    user={user}
-                    createNotification={createNotification}
-                    togglable={toggleRef}
+                    createBlog={createBlog}
                 />
             </Togglable>
 
