@@ -89,7 +89,7 @@ const App = () => {
             <h2>blogs</h2>
             <p>{user.name} logged in</p>
             <Logout setUser={setUser}/>
-            <Togglable buttonLabel='new note' ref={toggleRef}>
+            <Togglable buttonLabel='new note' buttonId='new-note' ref={toggleRef}>
                 <AddBlog
                     createBlog={createBlog}
                 />

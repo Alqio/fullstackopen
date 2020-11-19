@@ -35,5 +35,36 @@ describe('Blog app', function () {
             cy.contains('wrong username or password')
             cy.get('#username').should('not.contain', 'not a real user')
         })
+
+    })
+
+    describe('When logged in', function() {
+        beforeEach(function() {
+            cy.fixture('user').then((user) => {
+                cy.login({
+                    username: user.username,
+                    password: user.password
+                })
+            })
+        })
+
+        it('A blog can be created', function() {
+            const blog = {
+                title: 'blog title',
+                author: 'blog author',
+                url: 'blog url'
+            }
+
+            cy.get('#new-note').click()
+
+            cy.get('#title').type(blog.title)
+            cy.get('#author').type(blog.author)
+            cy.get('#url').type(blog.url)
+
+            cy.get('#create-blog').click()
+
+            cy.contains(blog.title + ' ' + blog.author)
+
+        })
     })
 })
