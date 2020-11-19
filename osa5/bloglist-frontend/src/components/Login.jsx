@@ -14,14 +14,15 @@ const Login = ({setUser, createNotification}) => {
             })
 
             window.localStorage.setItem('user', JSON.stringify(user))
-            setUsername('')
-            setPassword('')
+
             setUser(user)
         } catch (e) {
             createNotification('wrong username or password', 'red')
             console.log("Login failed:")
             console.error(e)
         }
+        setUsername('')
+        setPassword('')
     }
 
     return (
@@ -32,6 +33,7 @@ const Login = ({setUser, createNotification}) => {
                     username
                     <input
                         type="text"
+                        id="username"
                         value={username}
                         name="Username"
                         onChange={({target}) => setUsername(target.value)}
@@ -41,12 +43,13 @@ const Login = ({setUser, createNotification}) => {
                     password
                     <input
                         type="password"
+                        id="password"
                         value={password}
                         name="Password"
                         onChange={({target}) => setPassword(target.value)}
                     />
                 </div>
-                <button type="submit">login</button>
+                <button type="submit" id="login">login</button>
             </form>
         </div>
     )
