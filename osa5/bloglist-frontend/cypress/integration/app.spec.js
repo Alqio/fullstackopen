@@ -76,5 +76,14 @@ describe('Blog app', function () {
                 cy.contains('Likes: 3')
             })
         })
+
+        it('A blog can be removed', function () {
+            cy.fixture('blog').then(blog => {
+                cy.createBlog(blog)
+                cy.contains('view').click()
+                cy.contains('remove').click()
+                cy.contains(blog.title + ' ' + blog.author).should('not.exist')
+            })
+        })
     })
 })
