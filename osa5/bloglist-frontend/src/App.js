@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, {useState, useEffect, useRef} from 'react'
 import Blog from './components/Blog'
 import blogService from './services/blogs'
 import Login from './components/Login'
@@ -89,22 +89,23 @@ const App = () => {
             <h2>blogs</h2>
             <p>{user.name} logged in</p>
             <Logout setUser={setUser}/>
-            <Togglable buttonLabel='new note' buttonId='new-note' ref={toggleRef}>
+            <Togglable buttonLabel='new blog' buttonId='new-blog' ref={toggleRef}>
                 <AddBlog
                     createBlog={createBlog}
                 />
             </Togglable>
-
-            {blogs.map(blog =>
-                <Blog
-                    key={blog.id}
-                    blog={blog}
-                    user={user}
-                    likeBlog={likeBlog}
-                    blogs={blogs}
-                    setBlogs={setBlogs}
-                />
-            )}
+            <div id="blogs">
+                {blogs.map(blog =>
+                    <Blog
+                        key={blog.id}
+                        blog={blog}
+                        user={user}
+                        likeBlog={likeBlog}
+                        blogs={blogs}
+                        setBlogs={setBlogs}
+                    />
+                )}
+            </div>
 
         </div>
     )

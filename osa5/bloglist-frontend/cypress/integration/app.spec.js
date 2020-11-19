@@ -50,7 +50,7 @@ describe('Blog app', function () {
 
         it('A blog can be created', function () {
             cy.fixture('blog').then((blog) => {
-                cy.get('#new-note').click()
+                cy.get('#new-blog').click()
 
                 cy.get('#title').type(blog.title)
                 cy.get('#author').type(blog.author)
@@ -85,5 +85,39 @@ describe('Blog app', function () {
                 cy.contains(blog.title + ' ' + blog.author).should('not.exist')
             })
         })
+
+        it('Blogs are sorted by their likes', function () {
+            cy.fixture('blogs').then(blogs => {
+                cy.createBlog(blogs[0])
+                cy.createBlog(blogs[1])
+                cy.get('#blogs').children().then(elements => {
+
+                    const blog = elements[1]
+                    cy.wrap(blog).contains('view').click()
+                    cy.wrap(blog).contains('like').click()
+                })
+                cy.get('#blogs').children().then(elements => {
+                    const blog = elements[1]
+                    cy.wrap(blog).contains('Title: ' + blogs[1].title)
+                })
+                cy.get('#blogs').children().then(elements => {
+
+                    const blog = elements[0]
+                    cy.wrap(blog).contains('view').click()
+                    cy.wait(200)
+                    cy.wrap(blog).contains('like').click()
+                    cy.wait(200)
+                    cy.wrap(blog).contains('like').click()
+                    cy.wait(200)
+                    cy.wrap(blog).contains('like').click()
+
+                })
+                cy.get('#blogs').children().then(elements => {
+                    const blog = elements[0]
+                    cy.wrap(blog).contains('Title: ' + blogs[0].title)
+                })
+            })
+        })
+
     })
 })
