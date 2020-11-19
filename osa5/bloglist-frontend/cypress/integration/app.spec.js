@@ -38,8 +38,8 @@ describe('Blog app', function () {
 
     })
 
-    describe('When logged in', function() {
-        beforeEach(function() {
+    describe('When logged in', function () {
+        beforeEach(function () {
             cy.fixture('user').then((user) => {
                 cy.login({
                     username: user.username,
@@ -48,23 +48,33 @@ describe('Blog app', function () {
             })
         })
 
-        it('A blog can be created', function() {
-            const blog = {
-                title: 'blog title',
-                author: 'blog author',
-                url: 'blog url'
-            }
+        it('A blog can be created', function () {
+            cy.fixture('blog').then((blog) => {
+                cy.get('#new-note').click()
 
-            cy.get('#new-note').click()
+                cy.get('#title').type(blog.title)
+                cy.get('#author').type(blog.author)
+                cy.get('#url').type(blog.url)
 
-            cy.get('#title').type(blog.title)
-            cy.get('#author').type(blog.author)
-            cy.get('#url').type(blog.url)
+                cy.get('#create-blog').click()
 
-            cy.get('#create-blog').click()
+                cy.contains(blog.title + ' ' + blog.author)
+            })
+        })
 
-            cy.contains(blog.title + ' ' + blog.author)
+        it('A blog can be liked', function () {
+            cy.fixture('blog').then(blog => {
+                cy.createBlog(blog)
+                cy.contains('view').click()
 
+                cy.contains('like').click()
+                cy.wait(200)
+                cy.contains('like').click()
+                cy.wait(200)
+                cy.contains('like').click()
+
+                cy.contains('Likes: 3')
+            })
         })
     })
 })
