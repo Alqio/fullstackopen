@@ -5,23 +5,14 @@ const App = () => {
     const anecdotes = useSelector(state => state)
     const dispatch = useDispatch()
 
-    const vote = (id) => {
-        dispatch({
-            type: 'VOTE',
-            data: id
-        })
+    const increaseVote = (id) => {
+
     }
 
-    const createAnecdote = (event) => {
+    const addAnecdote = (event) => {
         event.preventDefault()
 
         const content = event.target.content.value
-
-        dispatch({
-            type: 'NEW',
-            data: content
-        })
-
     }
 
     return (
