@@ -32,11 +32,18 @@ const reducer = (state = initialState, action) => {
             }
             return state.map(a => a.id !== action.data ? a : newAnecdote)
 
+        case 'NEW':
+            const a = {
+                content: action.data,
+                id: getId(),
+                votes: 0
+            }
+            return [...state, a]
+
         default:
             return state
     }
 
-    return state
 }
 
 export default reducer
