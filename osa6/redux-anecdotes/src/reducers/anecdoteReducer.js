@@ -24,6 +24,13 @@ export const vote = (id) => {
     }
 }
 
+export const initAnecdotes = (anecdotes) => {
+    return {
+        type: 'INIT_ANECDOTES',
+        data: anecdotes
+    }
+}
+
 export const createAnecdote = (content) => {
     const anecdote = {
         content,
@@ -37,7 +44,7 @@ export const createAnecdote = (content) => {
 
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+const initialState = []//anecdotesAtStart.map(asObject)
 
 const reducer = (state = initialState, action) => {
     console.log('state now: ', state)
@@ -54,6 +61,9 @@ const reducer = (state = initialState, action) => {
 
         case 'NEW':
             return [...state, action.data]
+
+        case 'INIT_ANECDOTES':
+            return action.data
 
         default:
             return state
