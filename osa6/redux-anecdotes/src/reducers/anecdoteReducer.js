@@ -1,4 +1,4 @@
-import {getAnecdotes} from "../services/anecdotes";
+import anecdoteService from "../services/anecdotes";
 
 const getId = () => (100000 * Math.random()).toFixed(0)
 
@@ -19,7 +19,7 @@ export const vote = (id) => {
 
 export const initAnecdotes = () => {
     return async dispatch => {
-        const anecdotes = await getAnecdotes()
+        const anecdotes = await anecdoteService.getAnecdotes()
         dispatch({
             type: 'INIT_ANECDOTES',
             data: anecdotes
@@ -27,14 +27,18 @@ export const initAnecdotes = () => {
     }
 }
 
-export const createAnecdote = (anecdote) => {
-    return {
-        type: 'NEW',
-        data: anecdote
+export const createAnecdote = (content) => {
+    return async dispatch => {
+        const anecdote = asObject(content)
+        const created = await anecdoteService.createAnecdote(anecdote)
+        dispatch({
+            type: 'NEW',
+            data: created
+        })
     }
 }
 
-const initialState = []//anecdotesAtStart.map(asObject)
+const initialState = []
 
 const reducer = (state = initialState, action) => {
     console.log('state now: ', state)
