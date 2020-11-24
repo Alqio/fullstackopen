@@ -1,9 +1,21 @@
+import anecdoteService from "../services/anecdotes";
+
 const initialState = ''
 
 export const createNotification = (text) => {
     return {
         type: 'SET_NOTIFICATION',
         data: text
+    }
+}
+
+export const setNotification = (text, timeout) => {
+    return async dispatch => {
+        dispatch({
+            type: 'SET_NOTIFICATION',
+            data: text
+        })
+        setTimeout(() => dispatch(removeNotification()), timeout)
     }
 }
 
