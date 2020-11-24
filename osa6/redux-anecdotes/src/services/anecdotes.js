@@ -10,7 +10,13 @@ export const createAnecdote = async (data) => {
     return res.data
 }
 
+export const updateAnecdote = async (data) => {
+    const res = await axios.put('http://localhost:3001/anecdotes/' + data.id, data)
+    return res.data
+}
+
 export default {
     getAnecdotes,
-    createAnecdote
+    createAnecdote,
+    updateAnecdote
 }
